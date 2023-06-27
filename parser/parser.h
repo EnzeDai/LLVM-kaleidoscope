@@ -12,7 +12,7 @@
 #include "lexer/lexer.h"
 #include "lexer/token.h"
 
-extern std::map<char, int> BinopPriority;
+extern std::map<char, int> BinopPriority; // maintain the operation priority, priority numnber should greater than 0.
 std::unique_ptr<ExprAST> ParseNumberExpr();
 std::unique_ptr<ExprAST> ParseParentExpr();
 std::unique_ptr<ExprAST> ParseIdentifierExpr();
