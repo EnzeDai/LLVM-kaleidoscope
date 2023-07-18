@@ -91,7 +91,7 @@ static void MainLoop() {
         // Analyze Token
         switch (CurToken) {
             case tok_eof:
-                return
+                return;
             case ';':
                 getNextToken();
             case tok_def:
@@ -117,11 +117,11 @@ int main() {
     fprintf(stderr, "READY> ");
     getNextToken();
 
-    TheModule = std::make_unique<Module>("My Awesome JIT", Context)
+    TheModule = std::make_unique<Module>("My Awesome JIT", Context);
 
     MainLoop();
 
-    TheModule->print(errs(), nullptr());
+    TheModule->print(errs(), nullptr);
 
     return 0;
 }
