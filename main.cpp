@@ -50,19 +50,61 @@ using namespace llvm;
 // ==========================
 
 static void HandleDefinition() {
-
+    if (auto FnAST = ParseDefinition()) {
+        if (auto *FnIR = FnAST->codegen()) {
+            fprintf(stderr, "Read function definition:");
+            FnIR->print(errs());
+            fprintf(stderr, "\n");
+        }
+    } else {
+        getNextToken();
+    }
 }
 
 static void HandleExtern() {
-
+    if (auto ProtoAST = ParseExtern()) {
+        if (auto *FnIR = ProtoAST->codegen()) {
+            fprintf(stderr, "Read extern:");
+            FnIR->print(errs());
+            fprintf(stderr, "\n");
+        }
+    } else {
+        getNextToken();
+    }
 }
 
 static void HandleTopLevelExpression() {
-
+    if (auto FnAST = ParseTopLevelExpr()) {
+        if (auto *FnIR = FnAST->codegen()) {
+            fprintf(stderr, "Read top-level expression:");
+            FnIR->print(errs());
+            fprintf(stderr, "\n");
+        }
+    } else {
+        getNextToken();
+    }
 }
 
 static void MainLoop() {
-
+    while (true) {
+        fprintf(stderr, "READY> ");
+        // Analyze Token
+        switch (CurToken) {
+            case tok_eof:
+                return
+            case ';':
+                getNextToken();
+            case tok_def:
+                HandleDefinition();
+                break;
+            case tok_extern:
+                HandleExtern();
+                break;
+            default:
+                HandleTopLevelExpression();
+                break;
+        }
+    }
 }
 
 int main() {
@@ -75,6 +117,11 @@ int main() {
     fprintf(stderr, "READY> ");
     getNextToken();
 
+    TheModule = std::make_unique<Module>("My Awesome JIT", Context)
+
+    MainLoop();
+
+    TheModule->print(errs(), nullptr());
 
     return 0;
 }
